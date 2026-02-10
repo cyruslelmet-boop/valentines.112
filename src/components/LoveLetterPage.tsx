@@ -10,14 +10,11 @@ const playfairDisplay = Playfair_Display({
 });
 
 export default function LoveLetterPage({ onNext }: { onNext: () => void }) {
-  const letterContent = `My Dearest Princess Neema,
+  const letterContent = `My love,
 
-Words cannot express what you mean to me. Every moment with you is a treasure I'll cherish forever. You fill my life with love, joy, and endless possibilities.
+i just wanted to remind you how much you mean to me. Everyday with you feels warmer, brighter, and a little more magical.
 
-This is just the beginning of our beautiful story together.
-
-All my love,
-Cyrus 💕`;
+Thank you for the laughs, the late nights, and the quiet moments in between. I love you soo much`;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-pink-200 via-rose-200 to-red-200 p-4">
@@ -37,11 +34,14 @@ Cyrus 💕`;
           </p>
         </div>
 
-        {/* Photo placeholder */}
-        <div className="flex-1 relative w-64 h-80 rounded-lg shadow-2xl overflow-hidden bg-gradient-to-br from-pink-300 to-red-300">
-          <div className="w-full h-full flex items-center justify-center text-white text-center">
-            <p>Add your couple photo here</p>
-          </div>
+        {/* Couple Photo */}
+        <div className="flex-1 relative w-64 h-80 rounded-lg shadow-2xl overflow-hidden">
+          <Image
+            src="/couple-photo.jpg"
+            alt="Us"
+            fill
+            className="object-cover"
+          />
         </div>
       </motion.div>
 

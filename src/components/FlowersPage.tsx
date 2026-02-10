@@ -10,10 +10,10 @@ const playfairDisplay = Playfair_Display({
 
 export default function FlowersPage({ onNext }: { onNext: () => void }) {
   const flowerCaptions = [
-    "Like these flowers, my love blooms for you",
-    "Each petal represents my endless affection",
-    "You are the garden of my heart",
-    "These flowers pale compared to your beauty",
+    "You make my heart race",
+    "In your eyes, I found home",
+    "Every day with you is a gift",
+    "You're my favorite person",
   ];
 
   const flowers = ["🌹", "🌺", "🌸", "🌷"];
