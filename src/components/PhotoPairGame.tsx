@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-// 6 unique images
+// 18 unique images
 const baseImages = [
   "/game-photos/1.jpg",
   "/game-photos/2.jpg",
@@ -12,6 +12,18 @@ const baseImages = [
   "/game-photos/4.jpg",
   "/game-photos/5.jpg",
   "/game-photos/6.jpg",
+  "/game-photos/7.jpg",
+  "/game-photos/8.jpg",
+  "/game-photos/9.jpg",
+  "/game-photos/10.jpg",
+  "/game-photos/11.jpg",
+  "/game-photos/12.jpg",
+  "/game-photos/13.jpg",
+  "/game-photos/14.jpg",
+  "/game-photos/15.jpg",
+  "/game-photos/16.jpg",
+  "/game-photos/17.jpg",
+  "/game-photos/18.jpg",
 ];
 
 // Captions for each photo (edit these to be more personal)
@@ -36,14 +48,14 @@ const captions = [
   "Our love is eternal",
 ];
 
-// Create 6 pairs of images (12 images in total)
+// Create 18 pairs of images (36 images in total)
 const imagePairs = baseImages.flatMap((image) => [image, image]);
 
 // Messages shown when specific images are matched (keyed by filename number)
 const specialMessages: Record<string, string> = {
   "1": "From the moment I saw you, I knew.",
-  "3": "Your presence makes my world complete.",
-  "6": "With you, forever feels too short.",
+  "9": "Your presence makes my world complete.",
+  "18": "With you, forever feels too short.",
 };
 
 const shuffleArray = (array: string[]) => {
@@ -55,10 +67,13 @@ const shuffleArray = (array: string[]) => {
 };
 
 const heartLayout = [
-  [null, null, 0, 1, null, null],
-  [null, 2, 3, 4, 5, null],
-  [6, 7, 8, 9, 10, 11],
-  [null, null, null, null, null, null],
+  [null, null, 0, 1, null, 2, 3, null, null],
+  [null, 4, 5, 6, 7, 8, 9, 10, null],
+  [11, 12, 13, 14, 15, 16, 17, 18, 19],
+  [null, 20, 21, 22, 23, 24, 25, 26, null],
+  [null, null, 27, 28, 29, 30, 31, null, null],
+  [null, null, null, 32, 33, 34, null, null, null],
+  [null, null, null, null, 35, null, null, null, null],
 ];
 
 type ValentinesProposalProps = {
@@ -77,6 +92,62 @@ export default function PhotoPairGame({
   const [seconds, setSeconds] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [specialMessage, setSpecialMessage] = useState<string | null>(null);
+  
+  // Stats tracking
+  const [bestTime, setBestTime] = useState<number | null>(null);
+  const [bestMoves, setBestMoves] = useState<number | null>(null);
+  const [gamesPlayed, setGamesPlayed] = useState(0);
+
+  // Load stats from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("valentineGameStats");
+    if (saved) {
+      try {
+        const stats = JSON.parse(saved);
+        setBestTime(stats.bestTime);
+        setBestMoves(stats.bestMoves);
+        setGamesPlayed(stats.gamesPlayed);
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+  }, []);
+
+  // Sound effect utility
+  const playSound = (type: "flip" | "match" | "win") => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    if (type === "flip") {
+      oscillator.frequency.value = 600;
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } else if (type === "match") {
+      oscillator.frequency.value = 800;
+      gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+    } else if (type === "win") {
+      // Play a chord for victory
+      const notes = [523, 659, 784]; // C, E, G
+      notes.forEach((freq, i) => {
+        const osc = audioContext.createOscillator();
+        osc.frequency.value = freq;
+        osc.connect(gainNode);
+        osc.start(audioContext.currentTime + i * 0.1);
+        osc.stop(audioContext.currentTime + 0.5 + i * 0.1);
+      });
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+    }
+  };
 
   // Timer effect
   useEffect(() => {
@@ -85,11 +156,17 @@ export default function PhotoPairGame({
     return () => clearInterval(t);
   }, [timerRunning]);
 
+  const handleRestart = () => {
+    window.location.reload();
+  };
+
   const handleClick = async (index: number) => {
     if (selected.length === 2 || matched.includes(index) || selected.includes(index)) return;
 
     // Start timer on first interaction
     if (!timerRunning) setTimerRunning(true);
+    
+    playSound("flip");
 
     if (selected.length === 1) {
       const firstIndex = selected[0];
@@ -97,6 +174,7 @@ export default function PhotoPairGame({
       setSelected((prev) => [...prev, index]);
 
       if (shuffled[firstIndex] === shuffled[index]) {
+        playSound("match");
         setMatched((prev) => [...prev, firstIndex, index]);
         // Check for special message for this image
         const matchedSrc = shuffled[firstIndex];
@@ -120,31 +198,47 @@ export default function PhotoPairGame({
 
   // Check if game is won
   useEffect(() => {
-    if (matched.length === imagePairs.length) {
-      handleShowProposal();
+    if (matched.length === imagePairs.length && matched.length > 0) {
+      setTimerRunning(false);
+      playSound("win");
+      
+      // Update stats
+      const isNewBestTime = bestTime === null || seconds < bestTime;
+      const isNewBestMoves = bestMoves === null || moves < bestMoves;
+      const newBestTime = isNewBestTime ? seconds : bestTime;
+      const newBestMoves = isNewBestMoves ? moves : bestMoves;
+      
+      const stats = {
+        bestTime: newBestTime,
+        bestMoves: newBestMoves,
+        gamesPlayed: gamesPlayed + 1,
+      };
+      localStorage.setItem("valentineGameStats", JSON.stringify(stats));
+      
+      setTimeout(() => handleShowProposal(), 1500);
     }
-  }, [matched, handleShowProposal]);
+  }, [matched, handleShowProposal, bestTime, bestMoves, seconds, moves, gamesPlayed]);
 
   return (
-    <div className="grid grid-cols-6 gap-2 lg:gap-3 max-w-[95vw] mx-auto place-items-center">
-      {/* Image preload */}
-      <div className="hidden">
-        {shuffled.map((image, i) => (
-          <Image
-            key={i}
-            src={image}
-            alt={`Image ${i + 1}`}
-            fill
-            className="object-cover"
-            priority
-          />
-        ))}
-      </div>
-
-      {/* HUD: timer & moves */}
-      <div className="absolute top-4 left-4 z-40 text-white bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 rounded-lg font-bold shadow-lg">
-        <div>⏱️ Time: {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, "0")}</div>
-        <div>💕 Moves: {moves}</div>
+    <div className="w-full flex flex-col items-center justify-center gap-4 p-2 sm:p-4">
+      {/* Stats Display */}
+      <div className="flex gap-4 flex-wrap justify-center text-sm sm:text-base">
+        <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-2 rounded-lg font-bold shadow-lg">
+          <div>⏱️ {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, "0")}</div>
+          <div>💕 Moves: {moves}</div>
+        </div>
+        {bestTime !== null && (
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-lg font-bold shadow-lg text-xs sm:text-sm">
+            <div>🏆 Best Time: {Math.floor(bestTime / 60)}:{String(bestTime % 60).padStart(2, "0")}</div>
+            <div>⭐ Best Moves: {bestMoves}</div>
+          </div>
+        )}
+        <button
+          onClick={handleRestart}
+          className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-2 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all text-xs sm:text-sm"
+        >
+          🔄 Restart
+        </button>
       </div>
 
       {/* Special match message */}
@@ -154,69 +248,86 @@ export default function PhotoPairGame({
         </div>
       )}
 
-      {heartLayout.flat().map((index, i) =>
-        index !== null ? (
-          <motion.div
-            key={i}
-            className="w-[12vh] h-[12vh] lg:w-24 lg:h-24 relative cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-            onClick={() => handleClick(index)}
-            style={{ perspective: "1000px" }}
-          >
-            {/* Back of the card */}
-            {!selected.includes(index) && !matched.includes(index) && (
-              <motion.div
-                className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 rounded-lg absolute z-10 shadow-xl border-4 border-red-600 hover:border-red-500"
-                initial={{ rotateY: 0 }}
-                animate={{
-                  rotateY:
-                    selected.includes(index) || matched.includes(index)
-                      ? 180
-                      : 0,
-                }}
-                transition={{ duration: 0.5 }}
-                style={{ backfaceVisibility: "hidden" }}
-              />
-            )}
+      {/* Game Grid */}
+      <div className="grid grid-cols-9 gap-1 sm:gap-2 max-w-full overflow-hidden">
+        {/* Image preload */}
+        <div className="hidden">
+          {shuffled.map((image, i) => (
+            <Image
+              key={i}
+              src={image}
+              alt={`Image ${i + 1}`}
+              fill
+              className="object-cover"
+              priority
+            />
+          ))}
+        </div>
 
-            {/* Front of the card (image) */}
-            {(selected.includes(index) || matched.includes(index)) && (
-              <motion.div
-                className="w-full h-full absolute rounded-lg shadow-xl border-4 border-red-600 overflow-hidden"
-                initial={{ rotateY: 180 }}
-                animate={{
-                  rotateY:
-                    selected.includes(index) || matched.includes(index)
-                      ? 0
-                      : 180,
-                }}
-                transition={{ duration: 0.5 }}
-                style={{ backfaceVisibility: "hidden" }}
-              >
-                <Image
-                  src={shuffled[index]}
-                  alt={`Card ${index}`}
-                  fill
-                  className="object-cover"
+        {heartLayout.flat().map((index, i) =>
+          index !== null ? (
+            <motion.div
+              key={i}
+              className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 relative cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => handleClick(index)}
+              style={{ perspective: "1000px" }}
+            >
+              {/* Back of the card */}
+              {!selected.includes(index) && !matched.includes(index) && (
+                <motion.div
+                  className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 rounded-lg absolute z-10 shadow-xl border-4 border-red-600 hover:border-red-500"
+                  initial={{ rotateY: 0 }}
+                  animate={{
+                    rotateY:
+                      selected.includes(index) || matched.includes(index)
+                        ? 180
+                        : 0,
+                  }}
+                  transition={{ duration: 0.5 }}
+                  style={{ backfaceVisibility: "hidden" }}
                 />
-              </motion.div>
-            )}
+              )}
 
-            {/* Incorrect animation */}
-            {incorrect.includes(index) && (
-              <motion.div
-                className="absolute inset-0"
-                animate={{ scale: [1, 1.1, 1], opacity: [1, 0, 1] }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="w-full h-full bg-red-500 rounded-lg"></div>
-              </motion.div>
-            )}
-          </motion.div>
-        ) : (
-          <div key={i} className="w-[12vh] h-[12vh] lg:w-24 lg:h-24" />
-        ),
-      )}
+              {/* Front of the card (image) */}
+              {(selected.includes(index) || matched.includes(index)) && (
+                <motion.div
+                  className="w-full h-full absolute rounded-lg shadow-xl border-4 border-red-600 overflow-hidden"
+                  initial={{ rotateY: 180 }}
+                  animate={{
+                    rotateY:
+                      selected.includes(index) || matched.includes(index)
+                        ? 0
+                        : 180,
+                  }}
+                  transition={{ duration: 0.5 }}
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  <Image
+                    src={shuffled[index]}
+                    alt={`Card ${index}`}
+                    fill
+                    className="object-cover"
+                  />
+                </motion.div>
+              )}
+
+              {/* Incorrect animation */}
+              {incorrect.includes(index) && (
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ scale: [1, 1.1, 1], opacity: [1, 0, 1] }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="w-full h-full bg-red-500 rounded-lg"></div>
+                </motion.div>
+              )}
+            </motion.div>
+          ) : (
+            <div key={i} className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20" />
+          ),
+        )}
+      </div>
     </div>
   );
 }
