@@ -177,28 +177,45 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
         {step === 2 && (
           <motion.div
             key="step-2"
-            className={`relative z-10 text-4xl font-semibold mb-4 flex flex-col justify-center items-center text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
+            className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-6"
             transition={{ duration: 1 }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
           >
-            OMG {name}, you said YES! 🥳
-            <p className="text-sm mt-4 text-rose-700">For more information, write me!!! 💌</p>
-            <Image
-              src="/hamster_jumping.gif"
-              alt="Hamster Feliz"
-              width={200}
-              height={200}
-              unoptimized
-            />
+            <div className="flex flex-col items-center gap-2">
+              <h2 className={`text-5xl sm:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-pink-500 to-rose-600 drop-shadow-lg text-center ${playfairDisplay.className}`}>
+                OMG {name}!
+              </h2>
+              <h3 className={`text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500 drop-shadow-lg text-center ${playfairDisplay.className}`}>
+                You said YES! 🥳
+              </h3>
+            </div>
+
+            <div className="flex items-center justify-center">
+              <Image
+                src="/hamster_jumping.gif"
+                alt="Hamster Celebration"
+                width={250}
+                height={250}
+                unoptimized
+                priority
+              />
+            </div>
+
+            <p className="text-lg sm:text-xl text-rose-700 text-center px-4 font-semibold">
+              For more information, write me!!! 💌
+            </p>
+
             {onNext && (
-              <button
+              <motion.button
                 onClick={onNext}
-                className="mt-8 px-6 py-3 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                className="relative pointer-events-auto mt-6 px-8 py-4 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-110 active:scale-95"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Continue 💕
-              </button>
+                Continue to Flowers 💕
+              </motion.button>
             )}
           </motion.div>
         )}
