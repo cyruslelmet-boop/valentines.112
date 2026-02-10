@@ -4,26 +4,45 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import PhotoPairGame from "../components/PhotoPairGame";
 import ValentinesProposal from "@/components/ValentinesProposal";
+import LoveLetterPage from "@/components/LoveLetterPage";
+import FlowersPage from "@/components/FlowersPage";
 import TextFooter from "@/components/TextFooter";
 import OrientationGuard from "@/components/OrientationGuard";
 
 const ANIM_DURATION = 2;
 
 export default function Home() {
-  const [showValentinesProposal, setShowValentinesProposal] = useState(false);
+  const [page, setPage] = useState<"game" | "letter" | "flowers" | "proposal">("game");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleShowProposal = () => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setShowValentinesProposal(true);
+      setPage("letter");
+      setIsTransitioning(false);
+    }, ANIM_DURATION * 1000);
+  };
+
+  const handleLetterNext = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setPage("flowers");
+      setIsTransitioning(false);
+    }, ANIM_DURATION * 1000);
+  };
+
+  const handleFlowersNext = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setPage("proposal");
+      setIsTransitioning(false);
     }, ANIM_DURATION * 1000);
   };
 
   return (
     <OrientationGuard>
       <main className="flex items-center justify-center min-h-screen bg-black overflow-hidden relative">
-        {!showValentinesProposal ? (
+        {page === "game" && (
           <motion.div
             initial={{ opacity: 1 }}
             animate={{ opacity: isTransitioning ? 0 : 1 }}
@@ -36,7 +55,29 @@ export default function Home() {
               <TextFooter />
             </div>
           </motion.div>
-        ) : (
+        )}
+
+        {page === "letter" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isTransitioning ? 0 : 1 }}
+            transition={{ duration: ANIM_DURATION }}
+          >
+            <LoveLetterPage onNext={handleLetterNext} />
+          </motion.div>
+        )}
+
+        {page === "flowers" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isTransitioning ? 0 : 1 }}
+            transition={{ duration: ANIM_DURATION }}
+          >
+            <FlowersPage onNext={handleFlowersNext} />
+          </motion.div>
+        )}
+
+        {page === "proposal" && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

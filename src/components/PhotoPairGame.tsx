@@ -209,19 +209,6 @@ export default function PhotoPairGame({
                   fill
                   className="rounded-sm lg:rounded-md object-cover"
                 />
-
-                {/* Caption overlay for revealed card */}
-                <div className="absolute bottom-0 left-0 w-full bg-black/50 text-white text-xs py-1 text-center">
-                  {(() => {
-                    const src = shuffled[index];
-                    const m = src.match(/\/(\d+)\./);
-                    if (m) {
-                      const n = parseInt(m[1], 10);
-                      return captions[n - 1] || "";
-                    }
-                    return "";
-                  })()}
-                </div>
               </motion.div>
             )}
 
