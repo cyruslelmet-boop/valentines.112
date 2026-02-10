@@ -12,8 +12,8 @@ export default function FlowersPage({ onNext }: { onNext: () => void }) {
   const flowerCaptions = [
     "You make my heart race",
     "In your eyes, I found home",
-    "Every day with you is a gift",
     "You're my favorite person",
+    "Every day with you is a gift",
   ];
 
   const flowers = ["🌹", "🌺", "🌸", "🌷"];
