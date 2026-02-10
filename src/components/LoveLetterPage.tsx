@@ -35,12 +35,14 @@ Thank you for the laughs, the late nights, and the quiet moments in between. I l
         </div>
 
         {/* Couple Photo */}
-        <div className="flex-1 relative w-64 h-80 rounded-lg shadow-2xl overflow-hidden">
+        <div className="flex-1 flex justify-center">
           <Image
             src="/couple-photo.jpg"
             alt="Us"
-            fill
-            className="object-cover"
+            width={300}
+            height={400}
+            className="rounded-lg shadow-2xl object-cover"
+            priority
           />
         </div>
       </motion.div>
