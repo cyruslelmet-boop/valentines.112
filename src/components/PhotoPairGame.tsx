@@ -157,15 +157,15 @@ export default function PhotoPairGame({
       </div>
 
       {/* HUD: timer & moves */}
-      <div className="absolute top-4 left-4 z-40 text-white bg-black/40 px-3 py-1 rounded">
-        <div>Time: {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, "0")}</div>
-        <div>Moves: {moves}</div>
+      <div className="absolute top-4 left-4 z-40 text-white bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 rounded-lg font-bold shadow-lg">
+        <div>⏱️ Time: {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, "0")}</div>
+        <div>💕 Moves: {moves}</div>
       </div>
 
       {/* Special match message */}
       {specialMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-white/90 text-black px-4 py-2 rounded shadow">
-          {specialMessage}
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-pink-300 to-red-300 text-rose-900 px-6 py-3 rounded-lg shadow-xl font-semibold border-2 border-red-400">
+          ♥️ {specialMessage}
         </div>
       )}
 
@@ -181,7 +181,7 @@ export default function PhotoPairGame({
             {/* Back of the card */}
             {!selected.includes(index) && !matched.includes(index) && (
               <motion.div
-                className="w-full h-full bg-gray-300 rounded-sm lg:rounded-md absolute z-10"
+                className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 rounded-sm lg:rounded-md absolute z-10 shadow-lg border-2 border-pink-600"
                 initial={{ rotateY: 0 }}
                 animate={{
                   rotateY:

@@ -80,30 +80,30 @@ export default function ValentinesProposal({ name = "Princess Neema" }: { name?:
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-pink-200 via-rose-200 to-red-200">
       <AnimatePresence mode="wait">
         {step === 0 && (
           <motion.h2
             key="step-0"
-            className={`text-4xl font-semibold mb-4 ${playfairDisplay.className}`}
+            className={`text-4xl font-semibold mb-4 text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             transition={{ duration: 1 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            Congratulations! You have completed the game, {name}.
+            🎉 Congratulations! You have completed the game, {name}. 🎉
           </motion.h2>
         )}
         {step === 1 && (
           <motion.h2
             key="step-1"
-            className={`text-4xl font-semibold mb-4 ${playfairDisplay.className}`}
+            className={`text-4xl font-semibold mb-4 text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             transition={{ duration: 3 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            I have a surprise for you, {name}!
+            I have a surprise for you, {name}! 💝
           </motion.h2>
         )}
         {step === 2 && (
@@ -130,9 +130,9 @@ export default function ValentinesProposal({ name = "Princess Neema" }: { name?:
             </div>
 
             <h2
-              className={`text-5xl font-semibold mb-8 ${playfairDisplay.className}`}
+              className={`text-5xl font-semibold mb-8 text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             >
-              {name}, will you be my Valentine?
+              {name}, will you be my Valentine? 💕
             </h2>
             <Image
               src="/sad_hamster.png"
@@ -169,14 +169,14 @@ export default function ValentinesProposal({ name = "Princess Neema" }: { name?:
         {step === 3 && (
           <motion.div
             key="step-3"
-            className={`text-4xl font-semibold mb-4 flex flex-col justify-center items-center ${playfairDisplay.className}`}
+            className={`text-4xl font-semibold mb-4 flex flex-col justify-center items-center text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             transition={{ duration: 1 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             Thank you for accepting, {name} — I love you! 💕
-            <p className="text-sm mt-4">For more information, write me!!! 💌</p>
+            <p className="text-sm mt-4 text-rose-700">For more information, write me!!! 💌</p>
             <Image
               src="/hamster_jumping.gif"
               alt="Hamster Feliz"
