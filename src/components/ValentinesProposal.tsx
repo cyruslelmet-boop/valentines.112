@@ -204,11 +204,6 @@ export default function ValentinesProposal({ name = "Princess Neema" }: { name?:
           />
         </div>
       )}
-
-      {/* Optional voice clip: place `public/voice.mp3` to have it play on the final step */}
-      {step === 3 && (
-        <audio src="/voice.mp3" autoPlay />
-      )}
     </div>
   );
 }
