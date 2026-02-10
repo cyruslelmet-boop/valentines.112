@@ -26,15 +26,15 @@ export default function Home() {
   const handleLetterNext = () => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setPage("flowers");
+      setPage("proposal");
       setIsTransitioning(false);
     }, ANIM_DURATION * 1000);
   };
 
-  const handleFlowersNext = () => {
+  const handleProposalNext = () => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setPage("proposal");
+      setPage("flowers");
       setIsTransitioning(false);
     }, ANIM_DURATION * 1000);
   };
@@ -67,23 +67,23 @@ export default function Home() {
           </motion.div>
         )}
 
+        {page === "proposal" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isTransitioning ? 0 : 1 }}
+            transition={{ duration: ANIM_DURATION }}
+          >
+            <ValentinesProposal onNext={handleProposalNext} />
+          </motion.div>
+        )}
+
         {page === "flowers" && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: isTransitioning ? 0 : 1 }}
             transition={{ duration: ANIM_DURATION }}
           >
-            <FlowersPage onNext={handleFlowersNext} />
-          </motion.div>
-        )}
-
-        {page === "proposal" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: ANIM_DURATION }}
-          >
-            <ValentinesProposal />
+            <FlowersPage onNext={() => {}} />
           </motion.div>
         )}
       </main>

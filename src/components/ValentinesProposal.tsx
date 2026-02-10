@@ -49,7 +49,7 @@ const images = [
   "/game-photos/36.avif",
 ];
 
-export default function ValentinesProposal({ name = "Princess Neema" }: { name?: string }) {
+export default function ValentinesProposal({ name = "Princess Neema", onNext }: { name?: string; onNext?: () => void }) {
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState<{
     top: string;
@@ -185,6 +185,14 @@ export default function ValentinesProposal({ name = "Princess Neema" }: { name?:
               height={200}
               unoptimized
             />
+            {onNext && (
+              <button
+                onClick={onNext}
+                className="mt-8 px-6 py-3 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              >
+                Continue 💕
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
