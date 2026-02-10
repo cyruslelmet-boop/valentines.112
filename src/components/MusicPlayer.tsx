@@ -4,25 +4,34 @@ import { useEffect, useRef, useState } from "react";
 
 export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Autoplay on first user interaction (browsers require this)
     const handleUserGesture = () => {
-      // allow autoplay after first user gesture
-      if (!playing) {
-        audio.play().catch(() => {});
-        setPlaying(true);
-      }
+      audio.play().catch(() => {
+        console.log("Autoplay blocked, waiting for user interaction");
+      });
       window.removeEventListener("click", handleUserGesture);
+      window.removeEventListener("touchstart", handleUserGesture);
     };
 
-    window.addEventListener("click", handleUserGesture, { once: true });
+    // Try to play immediately (most browsers allow if muted or on desktop)
+    audio.play().catch(() => {
+      // If autoplay fails, wait for user gesture
+      window.addEventListener("click", handleUserGesture, { once: true });
+      window.addEventListener("touchstart", handleUserGesture, { once: true });
+      setPlaying(false);
+    });
 
-    return () => window.removeEventListener("click", handleUserGesture);
-  }, [playing]);
+    return () => {
+      window.removeEventListener("click", handleUserGesture);
+      window.removeEventListener("touchstart", handleUserGesture);
+    };
+  }, []);
 
   const toggle = () => {
     const audio = audioRef.current;
@@ -37,10 +46,13 @@ export default function MusicPlayer() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-white/80 dark:bg-black/60 rounded-md p-2 shadow-md">
+    <div className="fixed bottom-4 right-4 z-50 bg-gradient-to-r from-red-400 to-pink-400 rounded-lg p-3 shadow-lg">
       <audio ref={audioRef} src="/Lord_Huron_-_The_Night_We_Met__Official_Audio_(256k).mp3" loop />
-      <button onClick={toggle} className="px-3 py-1 rounded text-sm">
-        {playing ? "Pause Music" : "Play Music"}
+      <button
+        onClick={toggle}
+        className="px-4 py-2 rounded text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors"
+      >
+        {playing ? "🔊 Music On" : "🔇 Music Off"}
       </button>
     </div>
   );
