@@ -175,7 +175,8 @@ export default function ValentinesProposal({ name = "Princess Neema" }: { name?:
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            Thank you for accepting, {name} — I love you! 💕
+            OMG {name}, you said YES! 🥳
+            <p className="text-3xl mt-6">Thank you for accepting, {name} — I love you! 💕</p>
             <p className="text-sm mt-4 text-rose-700">For more information, write me!!! 💌</p>
             <Image
               src="/hamster_jumping.gif"
