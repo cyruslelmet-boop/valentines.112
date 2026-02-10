@@ -49,7 +49,7 @@ const images = [
   "/game-photos/36.avif",
 ];
 
-export default function ValentinesProposal() {
+export default function ValentinesProposal({ name = "Princess Neema" }: { name?: string }) {
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState<{
     top: string;
@@ -91,7 +91,7 @@ export default function ValentinesProposal() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            Congratulations! You have completed the game.
+            Congratulations! You have completed the game, {name}.
           </motion.h2>
         )}
         {step === 1 && (
@@ -103,7 +103,7 @@ export default function ValentinesProposal() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            I have a surprise for you!
+            I have a surprise for you, {name}!
           </motion.h2>
         )}
         {step === 2 && (
@@ -132,7 +132,7 @@ export default function ValentinesProposal() {
             <h2
               className={`text-5xl font-semibold mb-8 ${playfairDisplay.className}`}
             >
-              Will you be my Valentine?
+              {name}, will you be my Valentine?
             </h2>
             <Image
               src="/sad_hamster.png"
@@ -175,7 +175,7 @@ export default function ValentinesProposal() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            Thank you for accepting, I love you! 💕
+            Thank you for accepting, {name} — I love you! 💕
             <p className="text-sm mt-4">For more information, write me!!! 💌</p>
             <Image
               src="/hamster_jumping.gif"

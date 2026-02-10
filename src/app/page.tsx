@@ -30,6 +30,7 @@ export default function Home() {
             transition={{ duration: ANIM_DURATION }}
             className="flex flex-col items-center"
           >
+            <h1 className="text-2xl text-pink-400 mb-4">For Princess Neema</h1>
             <PhotoPairGame handleShowProposal={handleShowProposal} />
             <div className="mt-4 md:mt-0">
               <TextFooter />
