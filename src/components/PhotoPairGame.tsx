@@ -111,7 +111,7 @@ export default function PhotoPairGame({
       setMoves((m) => m + 1);
       setSelected((prev) => [...prev, index]);
 
-      if (images[firstIndex] === images[index]) {
+      if (shuffled[firstIndex] === shuffled[index]) {
         setMatched((prev) => [...prev, firstIndex, index]);
         // Check for special message for this image
         const matchedSrc = shuffled[firstIndex];
