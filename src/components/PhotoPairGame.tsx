@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import Fireworks from "@fireworks-js/react";
 
 // 18 unique images
 const baseImages = [
@@ -92,6 +93,7 @@ export default function PhotoPairGame({
   const [seconds, setSeconds] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [specialMessage, setSpecialMessage] = useState<string | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
   
   // Stats tracking
   const [bestTime, setBestTime] = useState<number | null>(null);
@@ -200,6 +202,7 @@ export default function PhotoPairGame({
   useEffect(() => {
     if (matched.length === imagePairs.length && matched.length > 0) {
       setTimerRunning(false);
+      setShowConfetti(true);
       playSound("win");
       
       // Update stats
@@ -215,119 +218,226 @@ export default function PhotoPairGame({
       };
       localStorage.setItem("valentineGameStats", JSON.stringify(stats));
       
-      setTimeout(() => handleShowProposal(), 1500);
+      setTimeout(() => {
+        setShowConfetti(false);
+        handleShowProposal();
+      }, 2000);
     }
   }, [matched, handleShowProposal, bestTime, bestMoves, seconds, moves, gamesPlayed]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-4 p-2 sm:p-4">
-      {/* Stats Display */}
-      <div className="flex gap-4 flex-wrap justify-center text-sm sm:text-base">
-        <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-2 rounded-lg font-bold shadow-lg">
-          <div>⏱️ {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, "0")}</div>
-          <div>💕 Moves: {moves}</div>
+    <div className="w-full flex flex-col items-center justify-center gap-4 p-2 sm:p-4 min-h-screen">
+      {/* Confetti on victory */}
+      {showConfetti && (
+        <div className="fixed inset-0 z-50">
+          <Fireworks
+            options={{
+              autoresize: true,
+            }}
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "fixed",
+              top: 0,
+              left: 0,
+            }}
+          />
         </div>
-        {bestTime !== null && (
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-lg font-bold shadow-lg text-xs sm:text-sm">
-            <div>🏆 Best Time: {Math.floor(bestTime / 60)}:{String(bestTime % 60).padStart(2, "0")}</div>
-            <div>⭐ Best Moves: {bestMoves}</div>
-          </div>
-        )}
-        <button
-          onClick={handleRestart}
-          className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-2 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all text-xs sm:text-sm"
+      )}
+
+      {/* Victory Message */}
+      {showConfetti && (
+        <motion.div
+          className="fixed inset-0 flex items-center justify-center z-40 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
         >
-          🔄 Restart
-        </button>
+          <motion.h1
+            className="text-5xl sm:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-pink-500 to-rose-500 drop-shadow-2xl text-center"
+            animate={{ scale: [0.5, 1.1, 1] }}
+            transition={{ duration: 1 }}
+          >
+            All Matched! 🎉
+          </motion.h1>
+        </motion.div>
+      )}
+
+      {/* Stats Display - Horizontal on desktop, Vertical on mobile */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-wrap justify-center w-full max-w-4xl">
+        <motion.div
+          className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-3 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all flex-shrink-0"
+          whileHover={{ scale: 1.05 }}
+        >
+          <div className="text-sm">⏱️ Time</div>
+          <div className="text-2xl">{Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, "0")}</div>
+        </motion.div>
+
+        <motion.div
+          className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-4 py-3 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all flex-shrink-0"
+          whileHover={{ scale: 1.05 }}
+        >
+          <div className="text-sm">💕 Moves</div>
+          <div className="text-2xl">{moves}</div>
+        </motion.div>
+
+        {bestTime !== null && (
+          <motion.div
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-3 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all flex-shrink-0"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="text-sm">🏆 Best</div>
+            <div className="text-lg">{Math.floor(bestTime / 60)}:{String(bestTime % 60).padStart(2, "0")} • {bestMoves} moves</div>
+          </motion.div>
+        )}
+
+        <motion.button
+          onClick={handleRestart}
+          className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-3 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95 flex-shrink-0"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <div className="text-sm">🔄</div>
+          <div className="text-lg">Restart</div>
+        </motion.button>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="w-full max-w-4xl">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-semibold text-gray-700">Cards Matched: {matched.length / 2} / 18</span>
+          <span className="text-xs text-gray-500">{Math.round((matched.length / imagePairs.length) * 100)}%</span>
+        </div>
+        <motion.div
+          className="w-full h-3 bg-gray-200 rounded-full overflow-hidden shadow-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <motion.div
+            className="h-full bg-gradient-to-r from-red-400 to-pink-500 rounded-full shadow-lg"
+            initial={{ width: 0 }}
+            animate={{ width: `${(matched.length / imagePairs.length) * 100}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </motion.div>
       </div>
 
       {/* Special match message */}
       {specialMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-pink-300 to-red-300 text-rose-900 px-6 py-3 rounded-lg shadow-xl font-semibold border-2 border-red-400">
+        <motion.div
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-pink-300 to-red-300 text-rose-900 px-6 py-3 rounded-xl shadow-2xl font-semibold border-2 border-red-400"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+        >
           ♥️ {specialMessage}
-        </div>
+        </motion.div>
       )}
 
-      {/* Game Grid */}
-      <div className="grid grid-cols-9 gap-1 sm:gap-2 max-w-full overflow-hidden">
-        {/* Image preload */}
-        <div className="hidden">
-          {shuffled.map((image, i) => (
-            <Image
-              key={i}
-              src={image}
-              alt={`Image ${i + 1}`}
-              fill
-              className="object-cover"
-              priority
-            />
-          ))}
-        </div>
+      {/* Game Grid Container */}
+      <motion.div
+        className="flex-1 flex items-center justify-center w-full max-w-full"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="grid grid-cols-9 gap-1 sm:gap-1.5 md:gap-2 lg:gap-3 p-2 sm:p-4 max-w-full overflow-hidden">
+          {/* Image preload */}
+          <div className="hidden">
+            {shuffled.map((image, i) => (
+              <Image
+                key={i}
+                src={image}
+                alt={`Image ${i + 1}`}
+                fill
+                className="object-cover"
+                priority
+              />
+            ))}
+          </div>
 
-        {heartLayout.flat().map((index, i) =>
-          index !== null ? (
-            <motion.div
-              key={i}
-              className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 relative cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              onClick={() => handleClick(index)}
-              style={{ perspective: "1000px" }}
-            >
-              {/* Back of the card */}
-              {!selected.includes(index) && !matched.includes(index) && (
-                <motion.div
-                  className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 rounded-lg absolute z-10 shadow-xl border-4 border-red-600 hover:border-red-500"
-                  initial={{ rotateY: 0 }}
-                  animate={{
-                    rotateY:
-                      selected.includes(index) || matched.includes(index)
-                        ? 180
-                        : 0,
-                  }}
-                  transition={{ duration: 0.5 }}
-                  style={{ backfaceVisibility: "hidden" }}
-                />
-              )}
-
-              {/* Front of the card (image) */}
-              {(selected.includes(index) || matched.includes(index)) && (
-                <motion.div
-                  className="w-full h-full absolute rounded-lg shadow-xl border-4 border-red-600 overflow-hidden"
-                  initial={{ rotateY: 180 }}
-                  animate={{
-                    rotateY:
-                      selected.includes(index) || matched.includes(index)
-                        ? 0
-                        : 180,
-                  }}
-                  transition={{ duration: 0.5 }}
-                  style={{ backfaceVisibility: "hidden" }}
-                >
-                  <Image
-                    src={shuffled[index]}
-                    alt={`Card ${index}`}
-                    fill
-                    className="object-cover"
+          {heartLayout.flat().map((index, i) =>
+            index !== null ? (
+              <motion.div
+                key={i}
+                className="relative cursor-pointer"
+                style={{
+                  width: "clamp(2rem, 8vw, 5rem)",
+                  height: "clamp(2rem, 8vw, 5rem)",
+                  perspective: "1000px",
+                }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleClick(index)}
+              >
+                {/* Back of the card */}
+                {!selected.includes(index) && !matched.includes(index) && (
+                  <motion.div
+                    className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 rounded-xl absolute z-10 shadow-xl border-3 border-red-600 hover:border-red-400 cursor-pointer"
+                    initial={{ rotateY: 0 }}
+                    animate={{
+                      rotateY:
+                        selected.includes(index) || matched.includes(index)
+                          ? 180
+                          : 0,
+                      boxShadow:
+                        selected.includes(index) || matched.includes(index)
+                          ? "0 0 20px rgba(239, 68, 68, 0.8)"
+                          : "0 10px 15px rgba(0, 0, 0, 0.1)",
+                    }}
+                    transition={{ duration: 0.5 }}
+                    style={{ backfaceVisibility: "hidden" }}
                   />
-                </motion.div>
-              )}
+                )}
 
-              {/* Incorrect animation */}
-              {incorrect.includes(index) && (
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ scale: [1, 1.1, 1], opacity: [1, 0, 1] }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className="w-full h-full bg-red-500 rounded-lg"></div>
-                </motion.div>
-              )}
-            </motion.div>
-          ) : (
-            <div key={i} className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20" />
-          ),
-        )}
-      </div>
+                {/* Front of the card (image) */}
+                {(selected.includes(index) || matched.includes(index)) && (
+                  <motion.div
+                    className="w-full h-full absolute rounded-xl shadow-xl border-3 border-red-600 overflow-hidden bg-white"
+                    initial={{ rotateY: 180 }}
+                    animate={{
+                      rotateY:
+                        selected.includes(index) || matched.includes(index)
+                          ? 0
+                          : 180,
+                      boxShadow: matched.includes(index)
+                        ? "0 0 30px rgba(236, 72, 153, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.3)"
+                        : "0 10px 15px rgba(0, 0, 0, 0.1)",
+                    }}
+                    transition={{ duration: 0.5 }}
+                    style={{ backfaceVisibility: "hidden" }}
+                  >
+                    <Image
+                      src={shuffled[index]}
+                      alt={`Card ${index}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </motion.div>
+                )}
+
+                {/* Incorrect animation */}
+                {incorrect.includes(index) && (
+                  <motion.div
+                    className="absolute inset-0"
+                    animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <div className="w-full h-full bg-red-500 rounded-xl opacity-50"></div>
+                  </motion.div>
+                )}
+              </motion.div>
+            ) : (
+              <div
+                key={i}
+                style={{
+                  width: "clamp(2rem, 8vw, 5rem)",
+                  height: "clamp(2rem, 8vw, 5rem)",
+                }}
+              />
+            ),
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 }
