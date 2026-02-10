@@ -80,7 +80,7 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-pink-200 via-rose-200 to-red-200">
+    <div className="relative flex flex-col items-center justify-center h-full w-full bg-gradient-to-br from-pink-200 via-rose-200 to-red-200 z-0">
       <AnimatePresence mode="wait">
         {step === 0 && (
           <motion.div
@@ -177,11 +177,11 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
         {step === 2 && (
           <motion.div
             key="step-2"
-            className={`text-4xl font-semibold mb-4 flex flex-col justify-center items-center text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
+            className={`relative z-10 text-4xl font-semibold mb-4 flex flex-col justify-center items-center text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             transition={{ duration: 1 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
           >
             OMG {name}, you said YES! 🥳
             <p className="text-sm mt-4 text-rose-700">For more information, write me!!! 💌</p>
@@ -205,7 +205,7 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
       </AnimatePresence>
 
       {showFireworks && (
-        <div className="absolute w-full h-full">
+        <div className="fixed inset-0 pointer-events-none z-20">
           <Fireworks
             options={{
               autoresize: true,
@@ -213,9 +213,10 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
             style={{
               width: "100%",
               height: "100%",
-              position: "absolute",
+              position: "fixed",
               top: 0,
               left: 0,
+              pointerEvents: "none",
             }}
           />
         </div>
