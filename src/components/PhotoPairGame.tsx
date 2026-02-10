@@ -28,24 +28,24 @@ const baseImages = [
 
 // Captions for each photo (edit these to be more personal)
 const captions = [
-  "Our first date",
-  "That rainy afternoon",
-  "Your laugh",
-  "Sunset together",
-  "Coffee at midnight",
-  "Road trip memory",
-  "The little victory",
-  "Candlelight dinner",
-  "That silly face",
-  "A perfect hug",
-  "Dancing in the kitchen",
-  "Movie night",
-  "Quiet morning",
-  "The surprise picnic",
-  "Holding hands",
-  "Snowy walk",
-  "Your smile",
-  "Our future",
+  "Our first kiss",
+  "Your eyes in the moonlight",
+  "Dancing in the rain",
+  "Whispered sweet nothings",
+  "Your hand in mine",
+  "Sunset promises",
+  "Our little adventure",
+  "Stolen kisses",
+  "Your laughter echoes",
+  "Tangled hearts",
+  "Stolen moments",
+  "Forever starts today",
+  "Love in every glance",
+  "Our perfect memory",
+  "Hearts entwined",
+  "Endless love",
+  "You complete me",
+  "Our love story",
 ];
 
 // Create 18 pairs of images (36 images in total)
@@ -53,9 +53,9 @@ const imagePairs = baseImages.flatMap((image) => [image, image]);
 
 // Messages shown when specific images are matched (keyed by filename number)
 const specialMessages: Record<string, string> = {
-  "1": "Remember our first date? I cherish that day.",
-  "5": "That coffee morning still makes me smile.",
-  "12": "Movie nights with you are the best.",
+  "1": "From that first kiss, I knew you were my forever.",
+  "9": "Your laughter is my favorite melody.",
+  "18": "With you, every moment is a lifetime of love.",
 };
 
 const shuffleArray = (array: string[]) => {
