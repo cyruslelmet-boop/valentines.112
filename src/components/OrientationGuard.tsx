@@ -12,9 +12,12 @@ export default function OrientationGuard({
 
   useEffect(() => {
     const checkOrientation = () => {
-      // Detects if we're in portrait mode
+      // Only enforce rotation on touch devices (phones/tablets) in portrait
+      const isTouch = !!(
+        (window as any).ontouchstart || navigator.maxTouchPoints > 0
+      );
       const portrait =
-        window.innerHeight > window.innerWidth && window.innerWidth < 1024;
+        isTouch && window.innerHeight > window.innerWidth && window.innerWidth < 1024;
       setIsPortrait(portrait);
     };
 
