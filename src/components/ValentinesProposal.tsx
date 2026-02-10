@@ -86,18 +86,6 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
           <motion.h2
             key="step-0"
             className={`text-4xl font-semibold mb-4 text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
-            transition={{ duration: 1 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            🎉 Congratulations! You have completed the game, {name}. 🎉
-          </motion.h2>
-        )}
-        {step === 1 && (
-          <motion.h2
-            key="step-1"
-            className={`text-4xl font-semibold mb-4 text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             transition={{ duration: 3 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -106,7 +94,7 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
             I have a surprise for you, {name}! 💝
           </motion.h2>
         )}
-        {step === 2 && (
+        {step === 1 && (
           <motion.div
             key="step-2"
             transition={{ duration: 3 }}
@@ -176,7 +164,6 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
             exit={{ opacity: 0 }}
           >
             OMG {name}, you said YES! 🥳
-            <p className="text-3xl mt-6">Thank you for accepting, {name} — I love you! 💕</p>
             <p className="text-sm mt-4 text-rose-700">For more information, write me!!! 💌</p>
             <Image
               src="/hamster_jumping.gif"
