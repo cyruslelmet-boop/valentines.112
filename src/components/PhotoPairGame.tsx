@@ -28,24 +28,24 @@ const baseImages = [
 
 // Captions for each photo (edit these to be more personal)
 const captions = [
-  "Our first kiss",
-  "Your eyes in the moonlight",
-  "Dancing in the rain",
-  "Whispered sweet nothings",
-  "Your hand in mine",
-  "Sunset promises",
-  "Our little adventure",
-  "Stolen kisses",
-  "Your laughter echoes",
-  "Tangled hearts",
-  "Stolen moments",
-  "Forever starts today",
-  "Love in every glance",
-  "Our perfect memory",
-  "Hearts entwined",
-  "Endless love",
-  "You complete me",
-  "Our love story",
+  "You make my heart race",
+  "In your eyes, I found home",
+  "Every day with you is a gift",
+  "You're my favorite person",
+  "My heart chose you",
+  "Love looks like you",
+  "You're my dream come true",
+  "Forever with you feels right",
+  "Your smile brightens my day",
+  "You complete my world",
+  "I fall for you every day",
+  "My soul recognizes yours",
+  "You're worth every moment",
+  "Together is my favorite place",
+  "You're my greatest adventure",
+  "My heart beats for you",
+  "You're simply unforgettable",
+  "Our love is eternal",
 ];
 
 // Create 18 pairs of images (36 images in total)
@@ -53,9 +53,9 @@ const imagePairs = baseImages.flatMap((image) => [image, image]);
 
 // Messages shown when specific images are matched (keyed by filename number)
 const specialMessages: Record<string, string> = {
-  "1": "From that first kiss, I knew you were my forever.",
-  "9": "Your laughter is my favorite melody.",
-  "18": "With you, every moment is a lifetime of love.",
+  "1": "From the moment I saw you, I knew.",
+  "9": "Your presence makes my world complete.",
+  "18": "With you, forever feels too short.",
 };
 
 const shuffleArray = (array: string[]) => {
