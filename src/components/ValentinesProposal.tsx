@@ -64,10 +64,10 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
   };
 
   useEffect(() => {
-    if (step < 2) {
-      // Change step after 5 seconds
+    if (step === 0) {
+      // Only auto-advance from step 0 after 5 seconds
       const timer = setTimeout(() => {
-        setStep((prevStep) => prevStep + 1);
+        setStep(1);
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -76,32 +76,52 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
 
   const handleYesClick = () => {
     setShowFireworks(true);
-    setStep(3);
+    setStep(2);
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-pink-200 via-rose-200 to-red-200">
       <AnimatePresence mode="wait">
         {step === 0 && (
-          <motion.h2
+          <motion.div
             key="step-0"
-            className={`text-4xl font-semibold mb-4 text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
-            transition={{ duration: 3 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto"
           >
-            I have a surprise for you, {name}! 💝
-          </motion.h2>
+            <div className="relative bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-100 rounded-3xl shadow-2xl p-12 text-center border-4 border-pink-300">
+              {/* Love emojis scattered around */}
+              <div className="absolute top-4 left-4 text-3xl opacity-70">💕</div>
+              <div className="absolute top-4 right-4 text-3xl opacity-70">💖</div>
+              <div className="absolute bottom-4 left-6 text-3xl opacity-70">💗</div>
+              <div className="absolute bottom-4 right-6 text-3xl opacity-70">💝</div>
+              <div className="absolute top-1/2 left-2 text-2xl opacity-50">💞</div>
+              <div className="absolute top-1/2 right-2 text-2xl opacity-50">💘</div>
+              
+              <h2
+                className={`text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-pink-500 to-rose-500 mb-4 ${playfairDisplay.className}`}
+              >
+                I have a surprise for you, {name}! 💝
+              </h2>
+              <p className="text-lg text-gray-700 mb-6">Get ready for something special...</p>
+              <div className="flex justify-center gap-2">
+                <span className="text-3xl">💕</span>
+                <span className="text-3xl">💖</span>
+                <span className="text-3xl">💗</span>
+              </div>
+            </div>
+          </motion.div>
         )}
         {step === 1 && (
           <motion.div
-            key="step-2"
-            transition={{ duration: 3 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center"
+            key="step-1"
+            transition={{ duration: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="flex flex-col items-center justify-center w-full"
           >
             {/* Image Grid Background */}
             <div className="absolute inset-0 grid grid-cols-6 opacity-10">
@@ -130,7 +150,7 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
             />
             <div className="flex space-x-4 mt-10">
               <button
-                className="px-6 py-2 text-lg font-semibold text-white bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl hover:from-pink-600 hover:to-rose-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="px-8 py-3 text-xl font-semibold text-white bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl hover:from-pink-600 hover:to-rose-600 transform hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-2xl"
                 onClick={handleYesClick}
               >
                 Yes, I will! 🥰
@@ -154,9 +174,9 @@ export default function ValentinesProposal({ name = "Princess Neema", onNext }: 
             </div>
           </motion.div>
         )}
-        {step === 3 && (
+        {step === 2 && (
           <motion.div
-            key="step-3"
+            key="step-2"
             className={`text-4xl font-semibold mb-4 flex flex-col justify-center items-center text-red-600 drop-shadow-lg ${playfairDisplay.className}`}
             transition={{ duration: 1 }}
             initial={{ opacity: 0 }}
